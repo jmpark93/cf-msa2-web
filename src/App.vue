@@ -157,6 +157,10 @@ export default {
     drawer: null,
   }),
 
+  created() {
+    console.log(process.env); 
+  },
+
   computed: {
     currentUser() {
       return this.$store.state.auth.user;

@@ -3,9 +3,13 @@ applications:
   path: ./dist
   buildpacks: 
     - nginx_buildpack
-  memory: 128M
+  memory: 256MB
+  disk: 512MB
   instances: 1
   env:
-    BACKEND_API: 'http://msa-todo.cf.intl'
+    BACKEND_AUTHAPI: 'http://msa-auth.cf.intl'
+    BACKEND_USERAPI: 'http://msa-auth.cf.intl'
+    BACKEND_TODOAPI: 'http://msa-todo.cf.intl'
+    BACKEND_BOOKAPI: 'http://msa-contents.cf.intl'
   routes:
   - route: msa-web.kpaasta.io
