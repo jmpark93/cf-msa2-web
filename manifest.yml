@@ -1,0 +1,11 @@
+applications:
+- name: cf-msa-web
+  path: ./dist
+  buildpacks: 
+    - nginx_buildpack
+  memory: 128M
+  instances: 1
+  env:
+    BACKEND_API: 'http://msa-todo.cf.intl'
+  routes:
+  - route: msa-web.kpaasta.io
