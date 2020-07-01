@@ -3,7 +3,12 @@
 
     <v-card v-if="!successful" width="400" class="mx-auto mt-5">
       <v-card-title  class="justify-center" >
-        <h1 class="display-1"> 사용자 등록 </h1>
+        <v-avatar class="profile" size="150" >
+          <img
+            src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
+            alt="Default Profiles"
+          >
+        </v-avatar>
       </v-card-title>
       <v-card-text>
         <v-form @submit.prevent="handleRegister" id="register-form">
@@ -25,7 +30,10 @@
             label="Email"
             prepend-icon="mdi-email" 
           />          
+        <v-file-input accept="image/*" label="프로파일 이미지"  @change="onFileChange"></v-file-input>
+
         </v-form>
+
       </v-card-text>
       <v-divider> </v-divider>
       <v-card-actions>
@@ -79,6 +87,10 @@ export default {
   },
 
   methods: {
+    onFileChange(e) {
+      console.log( "file changed : " + e.target.files[0].name )
+    }, 
+
     handleRegister() {
       this.submitted  = true;
 
