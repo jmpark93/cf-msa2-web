@@ -30,8 +30,9 @@ export const auth = {
       commit('logout');
     },
 
-    register({ commit }, user) {
-      return AuthService.register(user).then(
+    register({ commit }, objValue) {
+      console.log( "Image File(auth.module)" + objValue.imageFile);
+      return AuthService.register(objValue.user, objValue.imageFile).then(
         response => {
           commit('registerSuccess');
           return Promise.resolve(response.data);

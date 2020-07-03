@@ -23,12 +23,23 @@ class AuthService {
     localStorage.removeItem('user');
   }
 
-  register(user) {
-    return axios.post(API_URL + 'signup', {
-      username: user.username,
-      email: user.email,
-      password: user.password
-    });
+  register(user, imageFile) {
+    const formData = new FormData(); 
+
+    formData.append('profile', JSON.stringify(user))
+
+    if( imageFile ) {
+      formData.append('imageFile', imageFile);
+    }
+
+    return axios.post(API_URL + 'signup', 
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
   }
 }
 

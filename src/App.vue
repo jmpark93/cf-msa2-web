@@ -1,10 +1,20 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
+    <v-navigation-drawer v-model="drawer" app>
+
       <v-list dense>
+        <v-list-item v-if="loggedIn" two-line>
+          <v-list-item-avatar>
+            <img src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png" />
+          </v-list-item-avatar>
+
+          <v-list-item-content>
+            <v-list-item-title> {{ currentUser.username }} </v-list-item-title>
+            <v-list-item-subtitle> {{ currentUser.email }} </v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
 
         <v-list-item to="/">
           <v-list-item-action>
@@ -63,33 +73,28 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar
-      app
-      color="blue-grey"
-      dark
-    >
+    <v-app-bar app color="blue-grey" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>JMWork's App</v-toolbar-title>
 
       <v-spacer> </v-spacer>
 
-      <div v-if="!loggedIn"> 
-        <v-tooltip bottom> 
+      <div v-if="!loggedIn">
+        <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon to="/register"  v-bind="attrs" v-on="on">
+            <v-btn icon to="/register" v-bind="attrs" v-on="on">
               <v-icon> mdi-badge-account-horizontal-outline </v-icon>
             </v-btn>
           </template>
           <span> 등록 </span>
         </v-tooltip>
 
-        <v-tooltip bottom> 
+        <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon to="/login"  v-bind="attrs" v-on="on">
+            <v-btn icon to="/login" v-bind="attrs" v-on="on">
               <v-icon> mdi-login </v-icon>
             </v-btn>
           </template>
@@ -97,9 +102,9 @@
         </v-tooltip>
       </div>
 
-      <div v-else> 
+      <div v-else>
         {{ currentUser.username }}
-        <v-tooltip bottom> 
+        <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon to="/profile" v-bind="attrs" v-on="on">
               <v-icon> mdi-badge-account-horizontal </v-icon>
@@ -108,39 +113,33 @@
           <span> 프로파일 </span>
         </v-tooltip>
 
-        <v-tooltip bottom> 
+        <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon to="/login"  v-bind="attrs" v-on="on" @click.prevent="logOut">
+            <v-btn
+              icon
+              to="/login"
+              v-bind="attrs"
+              v-on="on"
+              @click.prevent="logOut"
+            >
               <v-icon> mdi-logout </v-icon>
             </v-btn>
           </template>
           <span> 로그아웃 </span>
         </v-tooltip>
       </div>
-
     </v-app-bar>
 
     <v-content>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
           <v-col class="text-center">
             <router-view></router-view>
           </v-col>
-          
         </v-row>
       </v-container>
     </v-content>
-    <v-footer
-      app
-      color="blue-grey"
-      class="white--text"
-    >
+    <v-footer app color="blue-grey" class="white--text">
       <span>Vuetify</span>
       <v-spacer></v-spacer>
       <span>&copy; 2020</span>
@@ -158,7 +157,7 @@ export default {
   }),
 
   created() {
-    console.log(process.env); 
+    console.log(process.env);
   },
 
   computed: {
@@ -168,25 +167,25 @@ export default {
 
     showAdminBoard() {
       if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN');
+        return this.currentUser.roles.includes("ROLE_ADMIN");
       }
 
       return false;
-    }, 
+    },
 
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    } 
-  },  
+    },
+  },
 
-methods: {
+  methods: {
     logOut() {
-      this.$store.dispatch('auth/logout');
+      this.$store.dispatch("auth/logout");
 
-      if( this.$router.path !== '/login') {
-        this.$router.push('/login').catch(() => {});;
+      if (this.$router.path !== "/login") {
+        this.$router.push("/login").catch(() => {});
       }
-    }
-  }  
-}
+    },
+  },
+};
 </script>
