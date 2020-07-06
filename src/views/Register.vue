@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-card v-if="!successful" width="400" class="mx-auto mt-5">
+
       <v-card-title class="justify-center">
         <v-avatar class="profile" size="150">
           <img
@@ -10,8 +11,13 @@
           />
         </v-avatar>
       </v-card-title>
+
       <v-card-text>
         <v-form @submit.prevent="handleRegister" id="register-form">
+
+          <v-subheader> 필수 항목 </v-subheader>
+          <v-divider />
+
           <v-text-field
             v-model="user.username"
             label="아이디"
@@ -30,6 +36,15 @@
             label="이메일"
             prepend-icon="mdi-email"
           />
+
+          <v-subheader> 선택 항목 </v-subheader>
+          <v-divider />
+
+          <v-text-field
+            v-model="user.fullname"
+            label="이름"
+            prepend-icon="mdi-email"
+          />
           <v-file-input
             prepend-icon="mdi-camera"
             accept="image/*"
@@ -39,29 +54,36 @@
           </v-file-input>
         </v-form>
       </v-card-text>
+
       <v-divider> </v-divider>
+
       <v-card-actions>
         <v-spacer> </v-spacer>
         <v-btn color="info" type="submit" form="register-form"> 등록 </v-btn>
       </v-card-actions>
+
       <v-card-text v-if="message">
         <v-alert dense text type="error" class="text-left">
           {{ message }}
         </v-alert>
       </v-card-text>
+
     </v-card>
 
     <v-card v-else width="400" class="mx-auto mt-5">
+
       <v-card-title class="justify-center">
         <v-avatar color="indigo">
           <v-icon x-large dark>mdi-account-circle</v-icon>
         </v-avatar>
       </v-card-title>
+
       <v-card-text v-if="message">
         <v-alert dense text type="success" class="text-left">
           {{ message }}
         </v-alert>
       </v-card-text>
+
     </v-card>
   </div>
 </template>
@@ -73,7 +95,7 @@ export default {
   name: "Register",
 
   data: () => ({
-    user: new User("", "", "", ""),
+    user: new User(),
     imageFile: "",
     successful: false,
     message: "",
@@ -116,26 +138,29 @@ export default {
     handleRegister() {
       this.submitted = true;
 
-      // console.log("Image File : " + this.imageFile.name);
       if (this.user.username && this.user.password && this.user.email) {
+        this.$store
+          .dispatch("auth/register", {
+            user: this.user,
+            imageFile: this.imageFile,
+          })
+          .then(
+            (data) => {
+              console.log(data);
+              this.message = data.message;
+              this.successful = true;
+            },
+            (error) => {
+              this.message =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString();
 
-        this.$store.dispatch("auth/register", { user : this.user, imageFile : this.imageFile } ).then(
-          (data) => {
-            console.log(data);
-            this.message = data.message;
-            this.successful = true;
-          },
-          (error) => {
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-
-            this.successful = false;
-          }
-        );
+              this.successful = false;
+            }
+          );
       } else {
         this.successful = false;
         this.message = "Username, Password, Email 모두 입력하세요.";

@@ -1,12 +1,16 @@
 <template>
   <div>
     <v-card width="400" class="mx-auto mt-5">
+
       <v-card-title  class="justify-center" >
-        <v-avatar color="indigo">
-          <v-icon x-large dark>mdi-account-circle</v-icon>
-        </v-avatar> 
-        <!-- <h1 class="display-1"> Login </h1> -->
+         <v-avatar class="profile" size="150">
+          <img
+            src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
+            alt="Default Profile Image"
+          />
+        </v-avatar>
       </v-card-title>
+
       <v-card-text>
         <v-form @submit.prevent="handleLogin" id="login-form">
           <v-text-field
@@ -24,15 +28,19 @@
           />
         </v-form>
       </v-card-text>
+
       <v-divider> </v-divider>
+
       <v-card-actions>
         <v-btn color="success" to=/register> Register </v-btn>
         <v-spacer> </v-spacer>
         <v-btn color="info" :disabled="loading" type="submit" form="login-form"> Login </v-btn>
       </v-card-actions>
+
       <v-card-text  v-if="message">
         <v-alert dense text type="error" class="text-left"> {{message}} </v-alert>
       </v-card-text>
+
     </v-card>
   </div>
 </template>
@@ -85,7 +93,7 @@ export default {
       } else {
         this.loading = false;
         this.message = "Username/Password를 입력하세요 ... ";
-      }        
+      }
     }
   }
 }

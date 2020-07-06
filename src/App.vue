@@ -3,7 +3,7 @@
     <v-navigation-drawer v-model="drawer" app>
 
       <v-list dense>
-        <v-list-item v-if="loggedIn" two-line>
+        <v-list-item v-if="loggedIn" two-line to="/profile">
           <v-list-item-avatar>
             <img src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png" />
           </v-list-item-avatar>
@@ -54,15 +54,6 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item v-if="currentUser" to="/profile">
-          <v-list-item-action>
-            <v-icon> mdi-badge-account-horizontal </v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title> Profile </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
         <v-divider></v-divider>
 
         <v-list-item to="/about">
@@ -103,7 +94,6 @@
       </div>
 
       <div v-else>
-        {{ currentUser.username }}
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
             <v-btn icon to="/profile" v-bind="attrs" v-on="on">
