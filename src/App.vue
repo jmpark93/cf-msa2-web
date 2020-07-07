@@ -5,7 +5,8 @@
       <v-list dense>
         <v-list-item v-if="loggedIn" two-line to="/profile">
           <v-list-item-avatar>
-            <img src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png" />
+            <img v-if="currentUser.imageURL" :src="currentUser.imageURL" />
+            <img v-else src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png" />
           </v-list-item-avatar>
 
           <v-list-item-content>
@@ -129,6 +130,7 @@
         </v-row>
       </v-container>
     </v-content>
+    
     <v-footer app color="blue-grey" class="white--text">
       <span>Vuetify</span>
       <v-spacer></v-spacer>
