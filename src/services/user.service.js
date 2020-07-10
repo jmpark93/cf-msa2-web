@@ -11,6 +11,10 @@ class UserService {
      return axios.get(API_URL + 'list', { headers: authHeader() });
   }
 
+  deleteUser(userId) {
+    return axios.delete(API_URL + userId, { headers: authHeader() });
+  }
+
   // for Nomarl User ... 
   getProfile(id) {
     return axios.get(API_URL + id, { headers: authHeader() });

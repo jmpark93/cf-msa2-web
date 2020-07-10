@@ -39,10 +39,6 @@ class AuthService {
       },
     });
   }
-
-  delete(userId) {
-    return axios.delete(API_URL + userId, { headers: authHeader() });
-  }
 }
 
 export default new AuthService();

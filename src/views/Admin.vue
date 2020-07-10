@@ -52,7 +52,6 @@
 
 <script>
 import UserService from "../services/user.service";
-import AuthService from "../services/auth.service";
 
 export default {
   name: "Admin",
@@ -113,7 +112,7 @@ export default {
       this.dialog = false;
       console.log("Delete User : " + this.users[this.deleteIdx].username + "(" + this.users[this.deleteIdx].id + ")");
 
-      AuthService.delete( this.users[this.deleteIdx].id ).then(
+      UserService.deleteUser( this.users[this.deleteIdx].id ).then(
         (response) => {
           console.log("Delete User : Success");
           console.log(response);
