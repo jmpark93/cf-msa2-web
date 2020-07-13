@@ -2,7 +2,4 @@
 nginx:
   version: stable
   plaintext_env_vars:
-    - "BACKEND_AUTHAPI"
-    - "BACKEND_USERAPI"
-    - "BACKEND_TODOAPI"
-    - "BACKEND_BOOKAPI"
+    - "BACKEND_APIGW"
