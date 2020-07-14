@@ -3,7 +3,7 @@ import authHeader from './auth-header';
 
 // const API_URL = 'http://localhost:8081/api/user/';
 // const API_URL = process.env.VUE_APP_USERAPI;
-const API_URL = process.env.VUE_APP_APIGW + '/user';
+const API_URL = process.env.VUE_APP_APIGW + '/user/';
 
 class UserService {
 

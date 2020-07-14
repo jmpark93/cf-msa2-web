@@ -1,5 +1,5 @@
 applications:
-- name: cf-msa-web
+- name: cf-msa2-web
   path: ./dist
   buildpacks: 
     - nginx_buildpack
@@ -7,9 +7,6 @@ applications:
   disk: 512MB
   instances: 1
   env:
-    BACKEND_AUTHAPI: 'http://msa-auth.cf.intl'
-    BACKEND_USERAPI: 'http://msa-auth.cf.intl'
-    BACKEND_TODOAPI: 'http://msa-todo.cf.intl'
-    BACKEND_BOOKAPI: 'http://msa-contents.cf.intl'
+    BACKEND_APIGW: 'http://msa2-gateway.cf.intl'
   routes:
-  - route: msa-web.kpaasta.io
+  - route: msa2-web.kpaasta.io
