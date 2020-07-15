@@ -20,9 +20,9 @@
           <br>자세한 설명은 다음 링크를 참조하시기 바랍니다. 
           <br> 
           <a
-            href="https://docs.kpaasta.io/dev/msa"
+            href="https://docs.kpaasta.io/dev/msa2"
             target="_blank"
-          > MSA 제작 가이드 (1) </a>
+          > MSA 제작 가이드 (2) </a>
         </p>
       </v-col>
 
