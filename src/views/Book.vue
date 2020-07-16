@@ -17,7 +17,7 @@
     <v-row>
       <v-col v-for="(item, i) in items" :key="i">
         <v-card :color="item.color" dark>
-          <div class="d-flex flex-no-wrap justify-space-between"> nm, 
+          <div class="d-flex flex-no-wrap justify-space-between"> 
             <div>
               <v-card-title class="headline">
                 {{ item.title }}
