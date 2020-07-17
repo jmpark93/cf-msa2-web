@@ -9,7 +9,7 @@
         prepend-inner-icon="mdi-book-search-outline"
       ></v-text-field>
 
-      <v-btn class="mx-4 mt-1" fab dark small color="indigo">
+      <v-btn class="mx-4 mt-1" to='/book/new' fab dark small color="indigo">
         <v-icon dark>mdi-plus</v-icon>
       </v-btn>
     </v-row>

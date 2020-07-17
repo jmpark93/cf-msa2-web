@@ -6,7 +6,7 @@
         <v-avatar class="profile" size="150">
           <img
             :ref="'imageFile'"
-            src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
+            src="http://msa2-minio.k8s.kpaasta.io/msa2-public/default-profile.png"
             alt="Default Profile Image"
           />
         </v-avatar>

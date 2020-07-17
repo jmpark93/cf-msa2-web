@@ -121,9 +121,9 @@
       </div>
     </v-app-bar>
 
-    <v-content>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
+    <v-content> 
+      <v-container fluid>
+        <v-row align="start" justify="center">
           <v-col class="text-center">
             <router-view></router-view>
           </v-col>
