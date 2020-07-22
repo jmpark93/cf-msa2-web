@@ -164,12 +164,16 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row v-if="!successful">
+        {{ this.message }}
+      </v-row>
     </v-form>
   </v-container>
 </template>
 
 <script>
 import Book from "@/models/book";
+import BookService from "@/services/book.service";
 
 export default {
   name: "book-new",
@@ -180,22 +184,25 @@ export default {
     purchaseDateMenu: false,
     publishDateMenu: false,
 
-    imageURL: "http://msa2-minio.k8s.kpaasta.io/msa2-book/default-book.png",
+    imageURL: "https://msa2-minio.k8s.kpaasta.io/msa2-book/default-book.png",
     imageFile: "",
 
     status: [
-      { text: "읽기 시작 안함", value: "NOTYET" },
-      { text: "읽고 있는 중", value: "ING" },
+      { text: "읽기 시작 안함", value: "Not Yet" },
+      { text: "읽고 있는 중", value: "Ing ..." },
       { text: "읽기 완료", value: "COMPLETE" },
     ],
 
-    successful: false,
-    message: "",
+    successful: true,
+    message: "문제인가요 ?",
   }),
 
   computed: {
     loggedin() {
       return this.$store.state.auth.status.loggedin;
+    },
+    currentUser() {
+      return this.$store.state.auth.user;
     },
   },
 
@@ -223,9 +230,26 @@ export default {
     handleRegister() {
       this.submitted = true;
 
+      console.log("Current User: " + this.currentUser.id);
+
       console.log("Image File : " + this.imageFile);
       console.log(this.book);
 
+      this.book.userID = this.currentUser.id;
+
+      BookService.addBook(this.book, this.imageFile).then(
+        (response) => {
+          this.successful = false;
+          this.message = response.data;
+          this.$router.push("/book");
+        },
+        (error) => {
+          this.successful = false;
+          this.message =
+            (error.response && error.response.data && error.message) ||
+            error.toString();
+        }
+      );
       //   if (this.user.username && this.user.password && this.user.email) {
       //     this.$store
       //       .dispatch("auth/register", {

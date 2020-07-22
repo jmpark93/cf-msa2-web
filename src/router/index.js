@@ -18,7 +18,8 @@ const routes = [
   { path: "/profile", name: "Profile", component: () => import("../components/user/Profile.vue") },
   { path: "/todo", name: "Todo", component: () => import("../views/Todo.vue") },
   { path: "/book", name: "Book", component: Book },
-  { path: "/book/new", component: () => import("../components/book/new.vue") },
+  { path: "/book/:id", name: "Book-Details",component: () => import("../components/book/details.vue") },
+  { path: "/addbook", name: "Book-Add", component: () => import("../components/book/add.vue") },
   { path: "/admin", name: "Admin", component: () => import("../views/Admin.vue"),
   },
 ];

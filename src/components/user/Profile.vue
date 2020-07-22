@@ -7,7 +7,7 @@
         :alt="content.imageURL"
       >
       <img v-else
-        src="http://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
+        src="https://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
         alt="Default Profile Image"
       />
     </v-avatar>
