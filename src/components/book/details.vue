@@ -247,22 +247,32 @@ export default {
     },
 
     handleUpdate() {
-      console.log("Current User: " + this.currentUser.id);
-      console.log("Image File : " + this.imageFile);
+      this.book.userID = this.currentUser.id;
 
       console.log(this.book);
 
-      this.book.userID = this.currentUser.id;
+      BookService.updateImage(this.book.id, this.imageFile ).then(
+        (response) => {
+          this.successful = false;
+          this.message = response.data;
+        },
+        (error) => {
+          this.successful = false;
+          this.message = this.message 
+            (error.response && error.response.data && error.message) ||
+            error.toString();
+        }
+      );
 
       BookService.updateBook(this.book).then(
         (response) => {
           this.successful = false;
-          this.message = response.data;
+          this.message = this.message + ',' + response.data;
           this.$router.push("/book");
         },
         (error) => {
           this.successful = false;
-          this.message =
+          this.message = this.message + ',' + 
             (error.response && error.response.data && error.message) ||
             error.toString();
         }

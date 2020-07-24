@@ -120,9 +120,11 @@ export default {
     },
 
     searchedItems() {
-      return this.items.filter( item => {
-        return item.title.toLowerCase().includes(this.search.toLowerCase());
-      })
+      return this.items.filter( 
+        item => {
+          return item.title.toLowerCase().includes(this.search.toLowerCase());
+        }
+      );
     }
 
   },
@@ -137,7 +139,7 @@ export default {
     BookService.getAllByUserId(this.currentUser.id).then(
       (response) => {
         this.items = response.data._embedded.books;
-        this.searchedItems = this.items;
+        // this.searchedItems = this.items;
 
         console.log(response.data);
       },
