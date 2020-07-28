@@ -53,7 +53,7 @@
               </v-card-text>
 
               <v-card-actions>
-                <v-btn icon :to="'/book/' + item.id">
+                <v-btn icon :to="'/bookinfo/' + item.id">
                   <v-icon color="white"> mdi-square-edit-outline </v-icon>
                 </v-btn>
                 <v-btn icon>
@@ -77,9 +77,9 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
-      {{ message }}
-    </v-row>
+    <!-- <v-row>
+      {{ message }}, {{ type }}
+    </v-row> -->
   </v-container>
 </template>
 
@@ -97,6 +97,8 @@ import BookService from "../services/book.service";
 
 export default {
   name: "Book",
+
+  props: { type: String }, 
 
   data: () => ({
     defaultImage:

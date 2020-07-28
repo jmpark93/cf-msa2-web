@@ -1,17 +1,21 @@
 <template>
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app>
-
       <v-list dense>
         <v-list-item v-if="loggedIn" two-line to="/profile">
           <v-list-item-avatar>
             <img v-if="currentUser.imageURL" :src="currentUser.imageURL" />
-            <img v-else src="https://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png" />
+            <img
+              v-else
+              src="https://msa2-minio.k8s.kpaasta.io/bucket-download/default-profile.png"
+            />
           </v-list-item-avatar>
 
           <v-list-item-content>
             <v-list-item-title> {{ currentUser.username }} </v-list-item-title>
-            <v-list-item-subtitle> {{ currentUser.email }} </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              {{ currentUser.email }}
+            </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
 
@@ -28,34 +32,55 @@
 
         <v-divider></v-divider>
 
-        <v-list-item v-if="currentUser" to="/todo">
-          <v-list-item-action>
-            <v-icon>mdi-clipboard-list</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Todo 앱</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <template v-if="currentUser">
+          <div v-for="(link, i) in links" :key="i">
+            <v-list-item v-if="!link.subLinks" :to="link.to">
+              <v-list-item-icon>
+                <v-icon>{{ link.icon }}</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title v-text="link.text" />
+            </v-list-item>
 
-        <v-list-item v-if="currentUser" to="/book">
-          <v-list-item-action>
-            <v-icon>mdi-book-open-variant</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Book 앱</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-group
+              v-else
+              :key="link.text"
+              :prepend-icon="link.icon"
+              no-action
+              value="true"
+            >
+              <template v-slot:activator>
+                <v-list-item-content>
+                  <v-list-item-title>{{ link.text }}</v-list-item-title>
+                </v-list-item-content>
+              </template>
 
-        <v-list-item v-if="showAdminBoard" to="/admin">
-          <v-list-item-action>
-            <v-icon>mdi-hammer-screwdriver</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>Admin Contents</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+              <v-list-item
+                v-for="sublink in link.subLinks"
+                :to="sublink.to"
+                :key="sublink.text"
+              >
+                <v-list-item-icon>
+                  <v-icon>{{ sublink.icon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>{{ sublink.text }}</v-list-item-title>
+              </v-list-item>
+            </v-list-group>
+          </div>
+          <v-divider></v-divider>
+        </template>
 
-        <v-divider></v-divider>
+        <template v-if="showAdminBoard">
+          <v-list-item to="/admin">
+            <v-list-item-action>
+              <v-icon>mdi-hammer-screwdriver</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>사용자 관리</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <v-divider></v-divider>
+        </template>
 
         <v-list-item to="/about">
           <v-list-item-action>
@@ -65,6 +90,8 @@
             <v-list-item-title>About</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-divider></v-divider>
       </v-list>
     </v-navigation-drawer>
 
@@ -121,7 +148,7 @@
       </div>
     </v-app-bar>
 
-    <v-content> 
+    <v-content>
       <v-container fluid>
         <v-row align="start" justify="center">
           <v-col class="text-center">
@@ -130,7 +157,7 @@
         </v-row>
       </v-container>
     </v-content>
-    
+
     <v-footer app color="blue-grey" class="white--text">
       <span>Vuetify</span>
       <v-spacer></v-spacer>
@@ -140,13 +167,56 @@
 </template>
 
 <script>
-
 export default {
   // props: {
   //   source: String,
   // },
   data: () => ({
     drawer: null,
+    links: [
+      {
+        icon: "mdi-clipboard-list",
+        text: "To Do",
+        subLinks: [
+          {
+            text: "할 일",
+            to: "/todo/all",
+            icon: "mdi-view-list",
+          },
+          {
+            text: "오늘 할 일",
+            to: "/todo/today",
+            icon: "mdi-calendar-today",
+          },
+          {
+            text: "중요",
+            to: "/todo/important",
+            icon: "mdi-star-outline",
+          },
+        ],
+      },
+      {
+        icon: "mdi-book-open-variant",
+        text: "Book : 독서 기록",
+        subLinks: [
+          {
+            text: "전체",
+            to: "/book/all",
+            icon: "mdi-view-list",
+          },
+          {
+            text: "읽고 있는 책",
+            to: "/book/ing",
+            icon: "mdi-book-play",
+          },
+          {
+            text: "다 읽은 책",
+            to: "/book/complete",
+            icon: "mdi-book-variant-multiple",
+          },
+        ],
+      },
+    ],
   }),
 
   created() {

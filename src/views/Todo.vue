@@ -1,74 +1,39 @@
 <template>
-  <div id="mainContainer">
-    <TodoHeader> </TodoHeader>
+  <v-container class="grey lighten-5">
+    <v-row>
 
-    <TodoInput> </TodoInput>
+      <v-col v-if="isShowList">
+        <TodoList v-on:list-event="showItems"> </TodoList>
+      </v-col>
 
-    <v-list two-line subheader>
-      <v-list-item-group v-model="model" color="primary">
-        <v-list-item v-for="task in todos" :key="task.id">
-          <v-list-item-action>
-            <v-checkbox
-              v-model="task.isDone"
-              :color="task.isDone ? 'primary' : 'gray'"
-              @change="updateTask(task)"
-            >
-            </v-checkbox>
-          </v-list-item-action>
-          <!--                 @change="updateTask(task)" >
+      <v-col v-if="isShowItem">
+        <TodoItem :taskID="selectedTask" v-on:item-event="hideItems"> </TodoItem>
+      </v-col>
 
-        <span class="flex-grow-1"
-              :class="todo.isDone ? 'text-muted' : ''"
-              :style="todo.isDone ? 'text-decoration: line-through': ''"
-        >   -->
+    </v-row>
 
-          <v-list-item-content class="text-left">
-            <v-list-item-title
-              :class="task.isDone ? 'grey--text' : 'primary--text'"
-            >
-              {{ task.todoItem }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ $moment.utc(task.updateTimeAt).local() | moment("from", "now") }} ,
-              <!-- {{ new Date() | moment("YYYY-MM-DD HH:mm:ss") }} -->
-            </v-list-item-subtitle>
-          </v-list-item-content>
-
-          <!-- <v-list-item-action>
-                <v-list-item-action-text> {{ task.updateTimeAt | moment("from", "now") }} </v-list-item-action-text>
-            </v-list-item-action> -->
-
-          <v-list-item-action>
-            <v-icon color="pink" @click="removeTask(task)">
-              mdi-delete-forever
-            </v-icon>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
-
-    <TodoFooter> </TodoFooter>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import TodoHeader from "@/components/todo/TodoHeader.vue";
-import TodoInput from "@/components/todo/TodoInput.vue";
-import TodoItem from "@/components/todo/TodoItem.vue";
-import TodoFooter from "@/components/todo/TodoFooter.vue";
+import TodoList from "@/components/todo/list.vue";
+import TodoItem from "@/components/todo/item.vue";
 
 export default {
   name: "Todo",
 
+  props: { status: String },
+
   data: () => ({
-    model: 1,
+    isMobile: false,
+
+    isShowList: true,
+    isShowItem: false,
+
+    selectedTask: ''
   }),
 
   computed: {
-    todos() {
-      return this.$store.state.todo.todos;
-    },
-
     currentUser() {
       return this.$store.state.auth.user;
     },
@@ -80,28 +45,37 @@ export default {
     } else {
       this.$store.dispatch("todo/getAllByUserId", this.currentUser.id);
     }
+
+    this.onResize();
+    window.addEventListener("resize", this.onResize, { passive: true });
   },
 
   methods: {
-    updateTask(task) {
-      console.log("task.isDone : " + task.isDone);
-      this.$store.dispatch("todo/updateTodo", {
-        id: task.id,
-        todoItem: task.todoItem,
-        isDone: task.isDone,
-      });
+    onResize() {
+      this.isMobile = window.innerWidth < 600;
     },
 
-    removeTask(task) {
-      this.$store.dispatch("todo/removeTodo", task.id);
+    showItems(taskID) {
+      this.selectedTask = taskID; 
+
+      if (this.isMobile) {
+        this.isShowList = false;
+        this.isShowItem = true;
+      } else {
+        this.isShowList = true;
+        this.isShowItem = true;
+      }
+    },
+
+    hideItems() {
+      this.isShowList = true;
+      this.isShowItem = false;
     },
   },
 
   components: {
-    TodoHeader: TodoHeader,
-    TodoInput: TodoInput,
+    TodoList: TodoList,
     TodoItem: TodoItem,
-    TodoFooter: TodoFooter,
   },
 };
 </script>

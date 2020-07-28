@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import About from "../views/About.vue";
 import Book from "../views/Book.vue";
+import Todo from "../views/Todo.vue";
 
 import Login from "../components/user/Login.vue";
 import Register from "../components/user/Register";
@@ -16,10 +17,13 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/profile", name: "Profile", component: () => import("../components/user/Profile.vue") },
-  { path: "/todo", name: "Todo", component: () => import("../views/Todo.vue") },
-  { path: "/book", name: "Book", component: Book },
-  { path: "/book/:id", name: "Book-Details",component: () => import("../components/book/details.vue") },
+
+  { path: "/todo/:type", name: "Todo", component: Todo, props: true },
+
+  { path: "/book/:type", name: "Book", component: Book, props: true },
+  { path: "/bookinfo/:id", name: "Book-Details",component: () => import("../components/book/details.vue"), props: true },
   { path: "/addbook", name: "Book-Add", component: () => import("../components/book/add.vue") },
+
   { path: "/admin", name: "Admin", component: () => import("../views/Admin.vue"),
   },
 ];

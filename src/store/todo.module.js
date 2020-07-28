@@ -107,7 +107,7 @@ export const todo = {
 
   getters: {
     numberOfComplete: state => {
-      return state.todos.filter( todo => todo.checked ).length;
+      return state.todos.filter( todo => todo.isDone === true).length;
     }
   }
 }

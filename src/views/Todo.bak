@@ -1,0 +1,107 @@
+<template>
+  <div id="mainContainer">
+    <TodoInput> </TodoInput>
+
+    <v-list two-line subheader>
+      <v-list-item-group v-model="model" color="primary">
+        <v-list-item v-for="task in todos" :key="task.id" >
+          <v-list-item-action>
+            <v-checkbox
+              v-model="task.isDone"
+              :color="task.isDone ? 'primary' : 'gray'"
+              @change="updateTask(task)"
+            >
+            </v-checkbox>
+          </v-list-item-action>
+
+          <v-list-item-content class="text-left" @click="toDetails(task.id)">
+            <v-list-item-title
+              :class="task.isDone ? 'grey--text' : 'primary--text'"
+              :style="task.isDone ? 'text-decoration: line-through': ''"
+            >
+              {{ task.todoItem }}
+            </v-list-item-title>
+            <v-list-item-subtitle>
+              {{ $moment.utc(task.updateTimeAt).local() | moment("from", "now") }} ,
+            </v-list-item-subtitle>
+          </v-list-item-content>
+
+          <v-list-item-action>
+            <v-icon v-if="task.favorite" color="primary" @click="task.favorite = !task.favorite">
+              mdi-star
+            </v-icon>
+            <v-icon v-else color="primary" @click="task.favorite = !task.favorite">
+              mdi-star-outline
+            </v-icon>            
+          </v-list-item-action>
+
+          <v-list-item-action>
+            <v-icon color="pink" @click="removeTask(task)">
+              mdi-delete-forever
+            </v-icon>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+    <TodoFooter> </TodoFooter>
+  </div>
+</template>
+
+<script>
+import TodoInput from "@/components/todo/TodoInput.vue";
+import TodoItem from "@/components/todo/TodoItem.vue";
+import TodoFooter from "@/components/todo/TodoFooter.vue";
+
+export default {
+  name: "Todo",
+
+  data: () => ({
+    model: 1,
+  }),
+
+  computed: {
+    todos() {
+      return this.$store.state.todo.todos;
+    },
+
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+
+  mounted() {
+    if (!this.currentUser) {
+      this.$router.push("/login");
+    } else {
+      this.$store.dispatch("todo/getAllByUserId", this.currentUser.id);
+    }
+  },
+
+  methods: {
+    updateTask(task) {
+      console.log("task.isDone : " + task.isDone);
+      this.$store.dispatch("todo/updateTodo", {
+        id: task.id,
+        todoItem: task.todoItem,
+        isDone: task.isDone,
+      });
+    },
+
+    removeTask(task) {
+      this.$store.dispatch("todo/removeTodo", task.id);
+    },
+
+    toDetails(taskID) {
+      console.log("Detail Item Clicked ... ");
+      this.$router.push({name: 'Todo-Details', params: {id: taskID}});
+    },
+  },
+
+  components: {
+    TodoInput: TodoInput,
+    TodoItem: TodoItem,
+    TodoFooter: TodoFooter,
+  },
+};
+</script>

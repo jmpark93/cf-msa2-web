@@ -157,7 +157,7 @@
               >
                 변경
               </v-btn>
-              <v-btn color="info" class="ma-4" to="/book">
+              <v-btn color="info" class="ma-4" to="/book/all">
                 취소
               </v-btn>
             </v-card-actions>
@@ -177,6 +177,8 @@ import BookService from "@/services/book.service";
 
 export default {
   name: "book-details",
+
+  props: { id: Number }, 
 
   data: () => ({
     book: new Book(),
@@ -207,7 +209,7 @@ export default {
   },
 
   mounted() {
-    this.getBook(this.$route.params.id);
+    this.getBook(this.id);
   },
 
   methods: {
@@ -268,7 +270,7 @@ export default {
         (response) => {
           this.successful = false;
           this.message = this.message + ',' + response.data;
-          this.$router.push("/book");
+          this.$router.push("/book/all");
         },
         (error) => {
           this.successful = false;
