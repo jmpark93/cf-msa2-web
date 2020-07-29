@@ -1,11 +1,18 @@
 <template>
-  <div>
-    <v-btn class="ma-2" tile outlined color="warning" @click="clearTask">
-      <v-icon left>mdi-delete-forever</v-icon> 완료항목 삭제
-    </v-btn>  
+  <div align="right">
+    <v-spacer />
+    <v-btn
+      class="ma-2"
+      tile
+      outlined
+      color="warning"
+      @click="clearTaskComplete"
+    >
+      완료 삭제<v-icon class="pl-2">mdi-delete-forever</v-icon>
+    </v-btn>
 
     <v-btn class="ma-2" tile outlined color="warning" @click="clearTask">
-      <v-icon left>mdi-delete-forever</v-icon> 전체 삭제
+      전체 삭제 <v-icon class="pl-2">mdi-delete-forever</v-icon>
     </v-btn>
   </div>
 </template>
@@ -21,6 +28,10 @@ export default {
   methods: {
     clearTask() {
       this.$store.dispatch("todo/removeAllByUserId", this.currentUser.id);
+    },
+
+    clearTaskComplete() {
+      this.$store.dispatch("todo/removeAllComplete", this.currentUser.id);
     },
   },
 };

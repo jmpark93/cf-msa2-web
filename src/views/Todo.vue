@@ -1,17 +1,15 @@
 <template>
   <v-container class="grey lighten-5">
     <v-row>
-
       <v-col v-if="isShowList">
-        <TodoList v-on:list-event="showItems"> </TodoList>
+        <TodoList :filterBy="filterBy" v-on:list-event="showItems"> </TodoList>
       </v-col>
 
       <v-col v-if="isShowItem">
-        <TodoItem :taskID="selectedTask" v-on:item-event="hideItems"> </TodoItem>
+        <TodoItem :taskID="selectedTask" v-on:item-event="hideItems">
+        </TodoItem>
       </v-col>
-
     </v-row>
-
   </v-container>
 </template>
 
@@ -22,7 +20,7 @@ import TodoItem from "@/components/todo/item.vue";
 export default {
   name: "Todo",
 
-  props: { status: String },
+  props: { type: String },
 
   data: () => ({
     isMobile: false,
@@ -30,7 +28,9 @@ export default {
     isShowList: true,
     isShowItem: false,
 
-    selectedTask: ''
+    selectedTask: "",
+
+    filterBy: '',
   }),
 
   computed: {
@@ -39,7 +39,19 @@ export default {
     },
   },
 
+  watch: {
+    type: function(newTaskID) {
+      // console.log("[Todo.vue] watch : searched by " + this.type);
+      this.filterBy = this.type; 
+      this.isShowItem = false;
+    },
+  },
+
   mounted() {
+    // console.log("[Todo.vue] mounted : searched by " + this.type);
+
+    this.filterBy = this.type; 
+
     if (!this.currentUser) {
       this.$router.push("/login");
     } else {
@@ -56,7 +68,7 @@ export default {
     },
 
     showItems(taskID) {
-      this.selectedTask = taskID; 
+      this.selectedTask = taskID;
 
       if (this.isMobile) {
         this.isShowList = false;

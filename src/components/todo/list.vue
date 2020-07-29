@@ -2,41 +2,45 @@
   <div>
     <TodoAdd> </TodoAdd>
 
-    <v-list two-line>
-      <v-list-item v-for="task in todos" :key="task.id">
+    <v-list two-line subheader>
+      <v-list-item v-for="taskIng in todosIng" :key="taskIng.id" @click="">
         <v-list-item-action>
           <v-checkbox
-            v-model="task.isDone"
-            :color="task.isDone ? 'primary' : 'gray'"
-            @change="updateTask(task)"
+            v-model="taskIng.isDone"
+            :color="taskIng.isDone ? 'primary' : 'gray'"
+            @change="updateTask(taskIng)"
           >
           </v-checkbox>
         </v-list-item-action>
 
-        <v-list-item-content class="text-left" @click="showItem(task.id)">
+        <v-list-item-content class="text-left" @click="showItem(taskIng.id)">
           <v-list-item-title
-            :class="task.isDone ? 'grey--text' : 'primary--text'"
-            :style="task.isDone ? 'text-decoration: line-through' : ''"
+            :class="taskIng.isDone ? 'grey--text' : 'primary--text'"
+            :style="taskIng.isDone ? 'text-decoration: line-through' : ''"
           >
-            {{ task.todoItem }}
+            {{ taskIng.todoItem }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            {{ $moment.utc(task.updateTimeAt).local() | moment("from", "now") }}
+            {{
+              $moment.utc(taskIng.createdTimeAt).local() | moment("from", "now")
+            }}
             ,
           </v-list-item-subtitle>
         </v-list-item-content>
 
         <v-list-item-action>
-          <v-btn icon @click="task.favorite = !task.favorite">
-            <v-icon v-if="task.favorite" color="primary"> mdi-star </v-icon>
+          <v-btn icon @click="updateStatus(taskIng)">
+            <v-icon v-if="taskIng.isImportant" color="primary">
+              mdi-star
+            </v-icon>
             <v-icon v-else color="primary"> mdi-star-outline </v-icon>
           </v-btn>
         </v-list-item-action>
       </v-list-item>
-    </v-list>
+      <!-- </v-list> -->
 
-    <v-list v-if="todosComplete.length !== 0" two-line subheader>
-      <v-subheader>
+      <!-- <v-list  two-line subheader> -->
+      <v-subheader v-if="todosComplete.length !== 0">
         <v-btn
           rounded
           color="blue-grey"
@@ -50,46 +54,46 @@
       </v-subheader>
 
       <template v-if="showComplete">
-        <v-list-item v-for="task in todosComplete" :key="task.id">
+        <v-list-item
+          v-for="taskCmplt in todosComplete"
+          :key="taskCmplt.id"
+          @click=""
+        >
           <v-list-item-action>
             <v-checkbox
-              v-model="task.isDone"
-              :color="task.isDone ? 'primary' : 'gray'"
-              @change="updateTask(task)"
+              v-model="taskCmplt.isDone"
+              :color="taskCmplt.isDone ? 'primary' : 'gray'"
+              @change="updateTask(taskCmplt)"
             >
             </v-checkbox>
           </v-list-item-action>
 
-          <v-list-item-content class="text-left" @click="showItem(task.id)">
+          <v-list-item-content
+            class="text-left"
+            @click="showItem(taskCmplt.id)"
+          >
             <v-list-item-title
-              :class="task.isDone ? 'grey--text' : 'primary--text'"
-              :style="task.isDone ? 'text-decoration: line-through' : ''"
+              :class="taskCmplt.isDone ? 'grey--text' : 'primary--text'"
+              :style="taskCmplt.isDone ? 'text-decoration: line-through' : ''"
             >
-              {{ task.todoItem }}
+              {{ taskCmplt.todoItem }}
             </v-list-item-title>
             <v-list-item-subtitle>
               {{
-                $moment.utc(task.updateTimeAt).local() | moment("from", "now")
+                $moment.utc(taskCmplt.createdTimeAt).local()
+                  | moment("from", "now")
               }}
               ,
             </v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-icon
-              v-if="task.favorite"
-              color="primary"
-              @click="task.favorite = !task.favorite"
-            >
-              mdi-star
-            </v-icon>
-            <v-icon
-              v-else
-              color="primary"
-              @click="task.favorite = !task.favorite"
-            >
-              mdi-star-outline
-            </v-icon>
+            <v-btn icon @click="updateStatus(taskCmplt)">
+              <v-icon v-if="taskCmplt.isImportant" color="primary">
+                mdi-star
+              </v-icon>
+              <v-icon v-else color="primary"> mdi-star-outline </v-icon>
+            </v-btn>
           </v-list-item-action>
         </v-list-item>
       </template>
@@ -106,40 +110,100 @@ import TodoFooter from "@/components/todo/footer.vue";
 export default {
   name: "TodoList",
 
+  props: { filterBy: String },
+
   data: () => ({
     showComplete: true,
   }),
 
+  // mounted() {
+  //   console.log("[list.vue] mounted() : search by " + this.filterBy);
+  //   this.filterTodos();
+  // },
+
+  // watch: {
+  //   filterBy: function(newState) {
+  //     console.log("[list.vue] watch() : search by " + this.filterBy);
+  //     this.filterTodos();
+  //   },
+  // },
+
   computed: {
-    todos() {
-       return this.$store.state.todo.todos;
+    // todosIng() {
     //   return this.$store.state.todo.todos.filter((item) => {
     //     return item.isDone === false;
     //   });
+    // },
+    todosIng() {
+      return this.filterTodosIng();
     },
 
+    // todosComplete() {
+    //   return this.$store.state.todo.todos.filter((item) => {
+    //     return item.isDone === true;
+    //   });
+    // },
+
     todosComplete() {
-      return this.$store.state.todo.todos.filter((item) => {
-        return item.isDone === true;
-      });
+      return this.filterTodosComplete();
     },
   },
 
-  mounted() {},
-
   methods: {
+    filterTodosIng() {
+      switch (this.filterBy) {
+        case "all":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === false;
+          });
+
+        case "today":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === false && item.isToday === true;
+          });
+
+        case "important":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === false && item.isImportant === true;
+          });
+      }
+    },
+
+    filterTodosComplete() {
+      switch (this.filterBy) {
+        case "all":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === true;
+          });
+
+        case "today":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === true && item.isToday === true;
+          });
+
+        case "important":
+          return this.$store.state.todo.todos.filter((item) => {
+            return item.isDone === true && item.isImportant === true;
+          });
+      }
+    },
+
     showItem(taskID) {
-      console.log("Selected Task : " + taskID);
+      // console.log("Selected Task : " + taskID);
       this.$emit("list-event", taskID);
     },
 
     updateTask(task) {
-      console.log("task.isDone : " + task.isDone);
-      this.$store.dispatch("todo/updateTodo", {
-        id: task.id,
-        todoItem: task.todoItem,
-        isDone: task.isDone,
-      });
+      // console.log("[list.vue] updateTask() : " + task.isDone);
+      this.$store.dispatch("todo/updateTodo", task);
+    },
+
+    updateStatus(task) {
+      // console.log(
+      //   "[list.vue] updateStatus() : task.isImportant : " + task.isImportant
+      // );
+      task.isImportant = !task.isImportant;
+      this.updateTask(task);
     },
   },
 
