@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TodoAdd> </TodoAdd>
+    <TodoAdd :addType="addType"> </TodoAdd>
 
     <v-list two-line subheader>
       <v-list-item v-for="taskIng in todosIng" :key="taskIng.id" @click="">
@@ -13,7 +13,10 @@
           </v-checkbox>
         </v-list-item-action>
 
-        <v-list-item-content class="text-left" @click="showItem(taskIng.id)">
+        <v-list-item-content
+          class="text-left"
+          @click="showItem(taskIng.id, true)"
+        >
           <v-list-item-title
             :class="taskIng.isDone ? 'grey--text' : 'primary--text'"
             :style="taskIng.isDone ? 'text-decoration: line-through' : ''"
@@ -21,10 +24,12 @@
             {{ taskIng.todoItem }}
           </v-list-item-title>
           <v-list-item-subtitle>
+            <template v-if="taskIng.isToday === true">
+              <v-icon> mdi-calendar-today </v-icon> 오늘 할 일,
+            </template>
             {{
               $moment.utc(taskIng.createdTimeAt).local() | moment("from", "now")
             }}
-            ,
           </v-list-item-subtitle>
         </v-list-item-content>
 
@@ -70,7 +75,7 @@
 
           <v-list-item-content
             class="text-left"
-            @click="showItem(taskCmplt.id)"
+            @click="showItem(taskCmplt.id, true)"
           >
             <v-list-item-title
               :class="taskCmplt.isDone ? 'grey--text' : 'primary--text'"
@@ -99,13 +104,27 @@
       </template>
     </v-list>
 
-    <TodoFooter> </TodoFooter>
+    <div align="right">
+      <v-spacer />
+      <v-btn
+        class="ma-2"
+        tile
+        outlined
+        color="warning"
+        @click="clearTaskComplete"
+      >
+        완료 삭제<v-icon class="pl-2">mdi-delete-forever</v-icon>
+      </v-btn>
+
+      <v-btn class="ma-2" tile outlined color="warning" @click="clearTask">
+        전체 삭제 <v-icon class="pl-2">mdi-delete-forever</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
 <script>
 import TodoAdd from "@/components/todo/add.vue";
-import TodoFooter from "@/components/todo/footer.vue";
 
 export default {
   name: "TodoList",
@@ -114,6 +133,7 @@ export default {
 
   data: () => ({
     showComplete: true,
+    addType: "",
   }),
 
   // mounted() {
@@ -146,6 +166,17 @@ export default {
 
     todosComplete() {
       return this.filterTodosComplete();
+    },
+
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
+  },
+
+  watch: {
+    filterBy: function(newFilter) {
+      // console.log("[list.vue] watch filterBy : " + this.filterBy);
+      this.addType = this.filterBy;
     },
   },
 
@@ -190,7 +221,12 @@ export default {
 
     showItem(taskID) {
       // console.log("Selected Task : " + taskID);
-      this.$emit("list-event", taskID);
+      this.$emit("list-event", taskID, true);
+    },
+
+    hideItem() {
+      // console.log("Selected Task : " + taskID);
+      this.$emit("list-event", 0, false);
     },
 
     updateTask(task) {
@@ -205,11 +241,27 @@ export default {
       task.isImportant = !task.isImportant;
       this.updateTask(task);
     },
+
+    clearTask() {
+      this.$store.dispatch("todo/removeAllByUserId", {
+        userID: this.currentUser.id,
+        delType: this.filterBy,
+      });
+      this.hideItem();
+    },
+
+    clearTaskComplete() {
+      // console.log( "[footer.vue] clearTaskComplete() :", this.delType );
+      this.$store.dispatch("todo/removeAllComplete", {
+        userID: this.currentUser.id,
+        delType: this.filterBy,
+      });
+      this.hideItem();
+    },
   },
 
   components: {
     TodoAdd: TodoAdd,
-    TodoFooter: TodoFooter,
   },
 };
 </script>

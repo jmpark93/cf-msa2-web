@@ -2,7 +2,7 @@
   <v-card>
     <v-card-text>
       <v-text-field
-        v-model="todo.todoItem"
+        v-model="title"
         filled
         clear-icon="mdi-close-circle"
         clearable
@@ -106,12 +106,11 @@
       <v-spacer />
 
       <div class="mr-4">
-        변경 :
-        {{ $moment.utc(todo.updateTimeAt).local() | moment("from", "now") }} /
-        생성 :
         {{
-          $moment.utc(todo.createdTimeAt).local() | moment("YYYY-MM-DD HH:mm:ss")
+          $moment.utc(todo.createdTimeAt).local() | moment("YYYY-MM-DD HH:mm")
         }}
+        (updated at :
+        {{ $moment.utc(todo.updateTimeAt).local() | moment("from", "now") }} )
       </div>
 
       <v-btn class="mx-2" fab outlined small @click="removeTask()">
@@ -130,28 +129,38 @@ export default {
   props: ["taskID"],
 
   data: () => ({
-    todo: new Todo(),
+    // todo: new Todo(),
+    title: "",
   }),
 
-  computed: {},
-
-  watch: {
-    taskID: function(newTaskID) {
+  computed: {
+    todo() {
       const index = this.$store.state.todo.todos.findIndex((todo) => {
         return todo.id === this.taskID;
       });
 
-      this.todo = Object.assign(this.todo, this.$store.state.todo.todos[index]);
+      this.title = this.$store.state.todo.todos[index].todoItem;
+      return this.$store.state.todo.todos[index];
     },
   },
 
-  mounted() {
-    const index = this.$store.state.todo.todos.findIndex((todo) => {
-      return todo.id === this.taskID;
-    });
+  // watch: {
+  //   taskID: function(newTaskID) {
+  //     const index = this.$store.state.todo.todos.findIndex((todo) => {
+  //       return todo.id === this.taskID;
+  //     });
 
-    this.todo = Object.assign(this.todo, this.$store.state.todo.todos[index]);
-  },
+  //     this.todo = Object.assign(this.todo, this.$store.state.todo.todos[index]);
+  //   },
+  // },
+
+  // mounted() {
+  //   const index = this.$store.state.todo.todos.findIndex((todo) => {
+  //     return todo.id === this.taskID;
+  //   });
+
+  //   this.todo = Object.assign(this.todo, this.$store.state.todo.todos[index]);
+  // },
 
   methods: {
     hideItem() {
@@ -167,7 +176,8 @@ export default {
 
     updateTask() {
       console.log("[item.vue] updateTask() : " + this.taskID);
-      this.$store.dispatch("todo/updateTodo", this.todo );
+      this.todo.todoItem = this.title;
+      this.$store.dispatch("todo/updateTodo", this.todo);
     },
 
     updateStatus(indicator) {

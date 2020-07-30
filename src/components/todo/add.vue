@@ -19,8 +19,10 @@
 import { Todo } from "@/models/todo";
 
 export default {
+  props: { addType: String },
+
   data: () => ({
-    task: '',
+    task: "",
     todo: new Todo(),
   }),
 
@@ -30,14 +32,30 @@ export default {
     },
   },
 
+  mounted() {},
+
   methods: {
     createTask() {
-      if (this.task !== '') {
-        this.todo.userID = this.currentUser.id;
-        this.todo.todoItem = this.task && this.task.trim();;
+      console.log("[add.vue] createTask() : " + this.addType);
 
-        this.$store.dispatch("todo/addTodo", this.todo );
-        this.task = '';
+      switch (this.addType) {
+        case "important":
+          this.todo.isImportant = true;
+          break;
+        case "today":
+          this.todo.isToday = true;
+          break;
+      }
+
+      console.log("[add.vue] createTask() : isToday = " + this.todo.isToday);
+      console.log("[add.vue] createTask() : isImportant = " + this.todo.isImportant);
+
+      if (this.task !== "") {
+        this.todo.userID = this.currentUser.id;
+        this.todo.todoItem = this.task && this.task.trim();
+
+        this.$store.dispatch("todo/addTodo", this.todo);
+        this.task = "";
       }
     },
   },

@@ -67,15 +67,15 @@ export default {
       this.isMobile = window.innerWidth < 600;
     },
 
-    showItems(taskID) {
+    showItems(taskID, isStatus) {
       this.selectedTask = taskID;
 
       if (this.isMobile) {
         this.isShowList = false;
-        this.isShowItem = true;
+        this.isShowItem = isStatus;
       } else {
         this.isShowList = true;
-        this.isShowItem = true;
+        this.isShowItem = isStatus;
       }
     },
 

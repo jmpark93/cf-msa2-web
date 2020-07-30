@@ -24,12 +24,38 @@ export const todo = {
       state.todos.splice(index, 1);
     },
 
-    CLEAR_ALL(state) {
-      state.todos = [];
+    CLEAR_ALL(state, status) {
+      switch (status) {
+        case "all":
+          state.todos = [];
+          break;
+        case "today":
+          state.todos = state.todos.filter((todo) => todo.isToday === false);
+          break;
+        case "important":
+          state.todos = state.todos.filter(
+            (todo) => todo.isImportant === false
+          );
+          break;
+      }
     },
 
-    CLEAR_COMPLETE(state) {
-      state.todos = state.todos.filter((todo) => todo.isDone === false);
+    CLEAR_COMPLETE(state, status) {
+      switch (status) {
+        case "all":
+          state.todos = state.todos.filter((todo) => todo.isDone === false);
+          break;
+        case "today":
+          state.todos = state.todos.filter(
+            (todo) => !(todo.isDone === true && todo.isToday === true)
+          );
+          break;
+        case "important":
+          state.todos = state.todos.filter(
+            (todo) => !(todo.isDone === true && todo.isImportant === true)
+          );
+          break;
+      }
     },
 
     UPDATE_TODO(state, value) {
@@ -43,9 +69,6 @@ export const todo = {
       state.todos[index].isToday = value.isToday;
       state.todos[index].isDone = value.isDone;
       state.todos[index].isImportant = value.isImportant;
-
-      state.todos[index].createTimeAt = value.createTimeAt;
-      state.todos[index].updateTimeAt = value.updateTimeAt;
     },
   },
 
@@ -103,34 +126,34 @@ export const todo = {
       );
     },
 
-    removeAllByUserId({ commit }, userId) {
-      return TodoService.removeAllByUserId(userId).then(
+    removeAllByUserId({ commit }, delCmd) {
+      return TodoService.removeAllByUserId(delCmd.userID, delCmd.delType).then(
         (response) => {
-          commit("CLEAR_ALL");
+          commit("CLEAR_ALL", delCmd.delType);
           return Promise.resolve(response);
         },
         (error) => {
           if (error.response.status === 404) {
-            commit("CLEAR_ALL");
+            commit("CLEAR_ALL", delCmd.delType);
           }
 
-          console.log("User[" + userId + "] removeAllByUserId() : " + error);
+          console.log("[todo.module.js] removeAllByUserId() : " + error);
         }
       );
     },
 
-    removeAllComplete({ commit }, userId) {
-      return TodoService.removeAllComplete(userId).then(
+    removeAllComplete({ commit }, delCmd) {
+      return TodoService.removeAllComplete(delCmd.userID, delCmd.delType).then(
         (response) => {
-          commit("CLEAR_COMPLETE");
+          commit("CLEAR_COMPLETE", delCmd.delType);
           return Promise.resolve(response);
         },
         (error) => {
           if (error.response.status === 404) {
-            commit("CLEAR_COMPLETE");
+            commit("CLEAR_COMPLETE", delCmd.delType);
           }
 
-          console.log("User[" + userId + "] removeAllComplete() : " + error);
+          console.log("[todo.module.js] removeAllComplete() : " + error);
         }
       );
     },

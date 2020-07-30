@@ -26,17 +26,68 @@ class TodoService {
     });
   }
 
-  removeAllByUserId(userId) {
-    return axios.get(API_URL + "search/deleteAllByUserID?userID=" + userId, {
-      headers: authHeader(),
-    });
+  removeAllByUserId(userID, delType) {
+    console.log(
+      "[todo.service.js] removeAllByUserId() : " + userID + ", " + delType
+    );
+
+    switch (delType) {
+      case "all":
+        return axios.get(
+          API_URL + "search/deleteAllByUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+
+      case "today":
+        return axios.get(
+          API_URL + "search/deleteAllByIsTodayIsTrueAndUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+
+      case "important":
+        return axios.get(
+          API_URL + "search/deleteAllByIsImportantIsTrueAndUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+    }
   }
 
-  removeAllComplete(userId) {
-    return axios.get(
-      API_URL + "search/deleteAllByIsDoneIsTrueAndUserID?userID=" + userId,
-      { headers: authHeader() }
+  removeAllComplete(userID, delType) {
+    console.log(
+      "[todo.service.js] removeAllComplete() : " + userID + ", " + delType
     );
+
+    switch (delType) {
+      case "all":
+        return axios.get(
+          API_URL + "search/deleteAllByIsDoneIsTrueAndUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+
+      case "today":
+        return axios.get(
+          API_URL + "search/deleteAllByIsDoneIsTrueAndIsTodayIsTrueAndUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+
+      case "important":
+        return axios.get(
+          API_URL + "search/deleteAllByIsDoneIsTrueAndIsImportantIsTrueAndUserID?userID=" + userID,
+          {
+            headers: authHeader(),
+          }
+        );
+    }
   }
 }
 
