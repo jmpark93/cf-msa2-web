@@ -45,7 +45,7 @@
       <!-- </v-list> -->
 
       <!-- <v-list  two-line subheader> -->
-      <v-subheader v-if="todosComplete.length !== 0">
+      <v-subheader v-if="todosComplete && todosComplete.length !== 0">
         <v-btn
           rounded
           color="blue-grey"
