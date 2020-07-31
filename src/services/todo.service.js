@@ -1,4 +1,3 @@
-import axios from "axios";
 import authHeader from "./auth-header";
 
 // const API_URL = 'http://localhost:8082/api/todos/';
@@ -50,7 +49,9 @@ class TodoService {
 
       case "important":
         return axios.get(
-          API_URL + "search/deleteAllByIsImportantIsTrueAndUserID?userID=" + userID,
+          API_URL +
+            "search/deleteAllByIsImportantIsTrueAndUserID?userID=" +
+            userID,
           {
             headers: authHeader(),
           }
@@ -74,7 +75,9 @@ class TodoService {
 
       case "today":
         return axios.get(
-          API_URL + "search/deleteAllByIsDoneIsTrueAndIsTodayIsTrueAndUserID?userID=" + userID,
+          API_URL +
+            "search/deleteAllByIsDoneIsTrueAndIsTodayIsTrueAndUserID?userID=" +
+            userID,
           {
             headers: authHeader(),
           }
@@ -82,7 +85,9 @@ class TodoService {
 
       case "important":
         return axios.get(
-          API_URL + "search/deleteAllByIsDoneIsTrueAndIsImportantIsTrueAndUserID?userID=" + userID,
+          API_URL +
+            "search/deleteAllByIsDoneIsTrueAndIsImportantIsTrueAndUserID?userID=" +
+            userID,
           {
             headers: authHeader(),
           }

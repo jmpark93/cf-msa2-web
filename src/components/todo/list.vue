@@ -2,10 +2,10 @@
   <div>
     <TodoAdd :addType="addType"> </TodoAdd>
 
-    <v-list two-line subheader>
-      <v-list-item v-for="taskIng in todosIng" :key="taskIng.id" @click="">
-        <v-list-item-action>
-          <v-checkbox
+    <v-list two-line subheader >
+      <v-list-item v-for="taskIng in todosIng" :key="taskIng.id" @click="" >
+        <v-list-item-action class="mr-4">
+          <v-checkbox 
             v-model="taskIng.isDone"
             :color="taskIng.isDone ? 'primary' : 'gray'"
             @change="updateTask(taskIng)"
@@ -14,7 +14,7 @@
         </v-list-item-action>
 
         <v-list-item-content
-          class="text-left"
+          class="text-left" 
           @click="showItem(taskIng.id, true)"
         >
           <v-list-item-title

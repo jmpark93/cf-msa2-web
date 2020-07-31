@@ -149,7 +149,7 @@
     </v-app-bar>
 
     <v-content>
-      <v-container fluid>
+      <v-container fluid class="pt-0">
         <v-row align="start" justify="center">
           <v-col class="text-center">
             <router-view></router-view>

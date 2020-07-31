@@ -3,6 +3,10 @@
 import Vue from 'vue';
 import axios from "axios";
 
+import store from '../store'
+import router from '../router'
+
+
 // Full config:  https://github.com/axios/axios#request-config
 // axios.defaults.baseURL = process.env.baseURL || process.env.apiUrl || '';
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
@@ -37,6 +41,13 @@ _axios.interceptors.response.use(
   },
   function(error) {
     // Do something with response error
+    console.log("[axios.js] interceptors.response : " + error.response.status );
+
+    if (error.response.status === 401) {
+      store.dispatch("auth/logout");
+      router.push('/login')
+    }
+
     return Promise.reject(error);
   }
 );

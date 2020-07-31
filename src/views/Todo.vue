@@ -1,5 +1,5 @@
 <template>
-  <v-container class="grey lighten-5">
+  <v-container class="ma-0 pa-0">
     <v-row>
       <v-col v-if="isShowList">
         <TodoList :filterBy="filterBy" v-on:list-event="showItems"> </TodoList>

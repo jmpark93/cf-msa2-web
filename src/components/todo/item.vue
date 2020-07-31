@@ -85,7 +85,7 @@
       <v-divider class="mt-5" />
 
       <v-textarea
-        v-model="todo.memo"
+        v-model="memo"
         label="메모"
         clear-icon="mdi-close-circle"
         clearable
@@ -108,9 +108,9 @@
       <div class="mr-4">
         {{
           $moment.utc(todo.createdTimeAt).local() | moment("YYYY-MM-DD HH:mm")
-        }}
+        }} <br>
         (updated at :
-        {{ $moment.utc(todo.updateTimeAt).local() | moment("from", "now") }} )
+        {{ $moment.utc(todo.updateTimeAt).local() | moment("from", "now") }} ) 
       </div>
 
       <v-btn class="mx-2" fab outlined small @click="removeTask()">
@@ -130,7 +130,8 @@ export default {
 
   data: () => ({
     // todo: new Todo(),
-    title: "",
+    title: '',
+    memo: ''
   }),
 
   computed: {
@@ -140,6 +141,8 @@ export default {
       });
 
       this.title = this.$store.state.todo.todos[index].todoItem;
+      this.memo = this.$store.state.todo.todos[index].memo;
+       
       return this.$store.state.todo.todos[index];
     },
   },
@@ -177,6 +180,8 @@ export default {
     updateTask() {
       console.log("[item.vue] updateTask() : " + this.taskID);
       this.todo.todoItem = this.title;
+      this.todo.memo = this.memo;
+
       this.$store.dispatch("todo/updateTodo", this.todo);
     },
 
